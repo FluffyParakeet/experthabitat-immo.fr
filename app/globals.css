@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  ::selection {
+    @apply bg-brand-pink/20 text-brand-dark;
+  }
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased;
+    color: var(--text-primary, #1a1035);
+    /* Lisibilité : un cran au-dessus du 16px “par défaut” navigateur */
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    background-color: var(--page-surface, #faf9fc);
+    background-image: radial-gradient(
+        ellipse 120% 80% at 100% -20%,
+        rgba(247, 245, 255, 0.9) 0%,
+        transparent 55%
+      ),
+      radial-gradient(ellipse 80% 50% at 0% 100%, rgba(229, 48, 91, 0.04) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  /** Sections page d’accueil : marge verticale + largeur alignée */
+  .section-padding-y {
+    @apply py-24 sm:py-32;
+  }
+  .page-container {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-7 lg:px-8;
+  }
+  .glass-hero {
+    @apply border border-white/10 bg-white/[0.07] shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-md;
+  }
+
+  /**
+   * Blocs flottants sur fond vidéo (recherche + stats) : même langage que le header
+   * (dégradé froid, blur, bordure claire) — cohérent avec brand-dark / brand-violet.
+   */
+  .hero-surface {
+    @apply rounded-3xl border border-white/20 bg-gradient-to-b from-white/[0.16] via-white/[0.08] to-white/[0.04] backdrop-blur-2xl;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  /**
+   * Sortie de section hero → fond de page : dégradé long, nombreux repères, sans « via »
+   * trop contrasté qui tranche la vidéo. Équivalents sRGB, pas d’espace couleur bancal.
+   */
+  .hero-fade-to-page {
+    background: linear-gradient(
+      to top,
+      #faf9fc 0%,
+      rgba(250, 249, 252, 0.98) 4%,
+      rgba(250, 249, 252, 0.9) 10%,
+      rgba(247, 244, 252, 0.7) 18%,
+      rgba(232, 228, 244, 0.45) 30%,
+      rgba(190, 182, 210, 0.22) 45%,
+      rgba(100, 88, 130, 0.1) 60%,
+      rgba(40, 32, 60, 0.05) 75%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+  .link-warm {
+    @apply text-brand-pink transition-colors hover:text-brand-pink/80 underline-offset-4 hover:underline;
+  }
+  /**
+   * Jointure page claire → footer : dégradé vertical bref, 100% horizontal, sans courbe.
+   */
+  .footer-top-fade {
+    background: linear-gradient(
+      180deg,
+      var(--page-surface, #faf9fc) 0%,
+      #f2ecf4 12%,
+      #d4c8de 32%,
+      #8a7898 55%,
+      #3a2d4a 78%,
+      #1a1035 100%
+    );
+  }
+}
+
+@layer base {
+  :root {
+    /* Aligné sur le fond de body — utilisé par le soufflet footer */
+    --page-surface: #faf9fc;
+    --brand-violet: #3d2b8e;
+    --brand-pink: #e5305b;
+    --brand-light-bg: #f7f5ff;
+    --brand-dark: #1a1035;
+    --gray-soft: #f4f4f6;
+    --text-primary: #1a1035;
+    --text-muted: #6b6880;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.141 0.005 285.823);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.141 0.005 285.823);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.141 0.005 285.823);
+    --primary: oklch(0.21 0.006 285.885);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.967 0.001 286.375);
+    --secondary-foreground: oklch(0.21 0.006 285.885);
+    --muted: oklch(0.967 0.001 286.375);
+    --muted-foreground: oklch(0.552 0.016 285.938);
+    --accent: oklch(0.967 0.001 286.375);
+    --accent-foreground: oklch(0.21 0.006 285.885);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.92 0.004 286.32);
+    --input: oklch(0.92 0.004 286.32);
+    --ring: oklch(0.705 0.015 286.067);
+    --chart-1: oklch(0.871 0.006 286.286);
+    --chart-2: oklch(0.552 0.016 285.938);
+    --chart-3: oklch(0.442 0.017 285.786);
+    --chart-4: oklch(0.37 0.013 285.805);
+    --chart-5: oklch(0.274 0.006 286.033);
+    --radius: 0.5rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.141 0.005 285.823);
+    --sidebar-primary: oklch(0.21 0.006 285.885);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.967 0.001 286.375);
+    --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
+    --sidebar-border: oklch(0.92 0.004 286.32);
+    --sidebar-ring: oklch(0.705 0.015 286.067);
+  }
+  .dark {
+    --background: oklch(0.141 0.005 285.823);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.21 0.006 285.885);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.21 0.006 285.885);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.92 0.004 286.32);
+    --primary-foreground: oklch(0.21 0.006 285.885);
+    --secondary: oklch(0.274 0.006 286.033);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.274 0.006 286.033);
+    --muted-foreground: oklch(0.705 0.015 286.067);
+    --accent: oklch(0.274 0.006 286.033);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.552 0.016 285.938);
+    --chart-1: oklch(0.871 0.006 286.286);
+    --chart-2: oklch(0.552 0.016 285.938);
+    --chart-3: oklch(0.442 0.017 285.786);
+    --chart-4: oklch(0.37 0.013 285.805);
+    --chart-5: oklch(0.274 0.006 286.033);
+    --sidebar: oklch(0.21 0.006 285.885);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.274 0.006 286.033);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.552 0.016 285.938);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}
