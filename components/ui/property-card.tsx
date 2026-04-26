@@ -1,14 +1,83 @@
 "use client";
 
+import { useLayoutEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { MapPin } from "lucide-react";
 import type { Property } from "@/lib/types";
 import { imagePlaceholderBlur } from "@/lib/image-blur";
 import { Button } from "./button";
 
+function useCanHover() {
+  const [canHover, setCanHover] = useState(false);
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(hover: hover)");
+    setCanHover(mq.matches);
+    const onChange = () => setCanHover(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return canHover;
+}
+
+function PropertyCardTitle({ title, isCardHovered }: { title: string; isCardHovered: boolean }) {
+  const reduced = useReducedMotion() ?? false;
+  const canHover = useCanHover();
+  const outerRef = useRef<HTMLHeadingElement>(null);
+  const innerRef = useRef<HTMLSpanElement>(null);
+  const [maxShift, setMaxShift] = useState(0);
+
+  const measure = useCallback(() => {
+    const h = outerRef.current;
+    const s = innerRef.current;
+    if (!h || !s) return;
+    setMaxShift(Math.max(0, s.scrollWidth - h.clientWidth));
+  }, [title]);
+
+  useLayoutEffect(() => {
+    measure();
+    const h = outerRef.current;
+    if (!h) return;
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(h);
+    return () => ro.disconnect();
+  }, [measure, title, maxShift, canHover, reduced]);
+
+  const overflows = maxShift > 0;
+  const useSlide = canHover && !reduced && overflows;
+
+  return (
+    <h3
+      ref={outerRef}
+      title={overflows ? title : undefined}
+      className="min-w-0 overflow-hidden font-display text-lg font-bold leading-tight text-text-primary sm:text-xl"
+    >
+      {useSlide ? (
+        <motion.span
+          ref={innerRef}
+          className="inline-block whitespace-nowrap will-change-transform"
+          initial={false}
+          animate={{ x: isCardHovered ? -maxShift : 0 }}
+          transition={{ type: "tween", duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+        >
+          {title}
+        </motion.span>
+      ) : (
+        <span
+          ref={innerRef}
+          className="block w-full min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
+        >
+          {title}
+        </span>
+      )}
+    </h3>
+  );
+}
+
 export function PropertyCard({ p }: { p: Property }) {
+  const [cardHover, setCardHover] = useState(false);
   const badge =
     p.badge === "exclusivite"
       ? { t: "Exclusivité", c: "from-brand-pink to-rose-500" }
@@ -27,7 +96,9 @@ export function PropertyCard({ p }: { p: Property }) {
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 280, damping: 22 }}
-      className="group relative overflow-hidden rounded-3xl border border-white/80 bg-white shadow-card"
+      className="group relative min-w-0 overflow-hidden rounded-3xl border border-white/80 bg-white shadow-card"
+      onPointerEnter={() => setCardHover(true)}
+      onPointerLeave={() => setCardHover(false)}
     >
       <div className="relative aspect-[4/3]">
         <Image
@@ -55,10 +126,8 @@ export function PropertyCard({ p }: { p: Property }) {
           </Button>
         </div>
       </div>
-      <div className="relative p-5 sm:p-6">
-        <h3 className="font-display text-lg font-bold leading-snug text-text-primary line-clamp-2 sm:text-xl">
-          {p.title}
-        </h3>
+      <div className="relative min-w-0 p-5 sm:p-6">
+        <PropertyCardTitle title={p.title} isCardHovered={cardHover} />
         <p className="mt-2 flex items-center gap-1.5 text-sm text-text-muted-custom sm:text-base">
           <MapPin className="h-4 w-4 shrink-0 text-brand-pink" />
           {p.city}
