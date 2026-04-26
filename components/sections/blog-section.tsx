@@ -17,11 +17,7 @@ export function BlogSection() {
     <section className="border-t border-white/50 section-padding-y">
       <div className="page-container">
         <FadeInView>
-          <SectionHeader
-            eyebrow="Lecture"
-            title="Nos conseils immobiliers"
-            description="Marché local, quartiers, projets : de Marcq à toute la métropole, écrits pour ceux qui avancent vraiment."
-          />
+          <SectionHeader eyebrow="Lecture" title="Nos conseils immobiliers" />
         </FadeInView>
         <motion.div
           className="mt-16 grid w-full min-w-0 grid-cols-1 gap-6 sm:mt-20 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8"
