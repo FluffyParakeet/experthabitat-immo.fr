@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "Conseils immobiliers | Expert Habitat",
   description: "Articles vente, achat, investissement sur la Métropole lilloise.",
+  alternates: { canonical: "/blog" },
 };
 
 export const revalidate = 3600;

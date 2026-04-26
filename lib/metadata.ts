@@ -41,10 +41,7 @@ export const defaultMetadata: Metadata = {
     telephone: true,
     email: true,
   },
-  alternates: {
-    canonical: "/",
-  },
-  authors: [{ name: "Aurélien Sabé", url: "https://experthabitat-immo.fr" }],
+  authors: [{ name: "Aurélien Sabé", url: siteUrl.replace(/\/$/, "") }],
 };
 
 export const businessJsonLd = {

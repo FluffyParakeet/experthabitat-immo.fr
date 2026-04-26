@@ -7,6 +7,7 @@ import { siteContact } from "@/lib/types";
 export const metadata: Metadata = {
   title: "Nos biens | Expert Habitat",
   description: `Biens en exclusivité : ${siteContact.tagline} sur la métropole lilloise.`,
+  alternates: { canonical: "/biens" },
 };
 
 export const revalidate = 3600;
