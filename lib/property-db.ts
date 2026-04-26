@@ -14,6 +14,18 @@ export async function getPublishedProperties(): Promise<Property[]> {
   return rows.map(propertyRowToProperty);
 }
 
+/** Aperçu accueil (galerie) : les annonces les plus récentes, plafonné. */
+export async function getPublishedPropertiesForHome(limit: number): Promise<Property[]> {
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(properties)
+    .where(eq(properties.published, true))
+    .orderBy(desc(properties.createdAt), desc(properties.id))
+    .limit(limit);
+  return rows.map(propertyRowToProperty);
+}
+
 export async function getAllPropertiesForAdmin() {
   const db = getDb();
   return db

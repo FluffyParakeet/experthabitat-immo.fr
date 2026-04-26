@@ -1,7 +1,11 @@
 import { blogPosts, getPostBySlug } from "./data-blog";
 import { imagePlaceholderBlur } from "./image-blur";
 import { columnTestimonials, testimonials } from "./data-testimonials";
-import { getPropertyBySlug, getPublishedProperties } from "./property-db";
+import {
+  getPropertyBySlug,
+  getPublishedProperties,
+  getPublishedPropertiesForHome,
+} from "./property-db";
 import type {
   BlogCategory,
   BlogPost,
@@ -16,6 +20,7 @@ export {
   getPostBySlug,
   imagePlaceholderBlur,
   getPublishedProperties,
+  getPublishedPropertiesForHome,
   getPropertyBySlug,
   columnTestimonials,
   testimonials,

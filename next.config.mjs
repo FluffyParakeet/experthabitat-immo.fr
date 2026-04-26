@@ -1,8 +1,10 @@
+import bundleAnalyzer from "@next/bundle-analyzer";
+
 const csp = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://va.vercel-scripts.com",
   "style-src 'self' 'unsafe-inline' blob:",
-  "img-src 'self' data: blob: https: https://images.unsplash.com https://i.pravatar.cc https://expertimo.staticlbi.com",
+  "img-src 'self' data: blob: https: https://images.unsplash.com https://expertimo.staticlbi.com",
   "media-src 'self' blob:",
   "font-src 'self' data:",
   "connect-src 'self' https://vitals.vercel-insights.com https://vercel.live https://va.vercel-scripts.com",
@@ -21,7 +23,6 @@ const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
-      { protocol: "https", hostname: "i.pravatar.cc", pathname: "/**" },
       {
         protocol: "https",
         hostname: "expertimo.staticlbi.com",
@@ -66,4 +67,6 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "true" });
+
+export default withBundleAnalyzer(nextConfig);
