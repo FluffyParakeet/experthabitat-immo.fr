@@ -74,6 +74,7 @@ export const siteContact = {
   email: "aurelien@experthabitat-immo.fr",
   hours: "Lun–Sam 9h–19h",
   instagram: "https://www.instagram.com/expert.habitat_",
+  linkedin: "https://www.linkedin.com",
   facebook: "https://www.facebook.com",
   tagline: "La persévérance au cœur de l’immobilier",
 } as const;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MapPin, Phone } from "lucide-react";
 import { CookiePreferencesLink } from "@/components/cookie-consent/cookie-preferences-link";
+import { FacebookIcon, InstagramIcon, LinkedInIcon } from "@/components/icons/social-brands";
 import { ExpertLogo } from "./logo";
 import { siteContact, legal } from "@/lib/types";
 
@@ -50,6 +51,38 @@ export function Footer() {
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
                 <span className="min-w-0 break-words">{siteContact.address}</span>
               </p>
+              <div className="flex flex-wrap items-center gap-2 pt-1" role="list" aria-label="Réseaux sociaux">
+                <a
+                  href={siteContact.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  role="listitem"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/90 transition hover:bg-white/20 hover:text-white"
+                  aria-label="Expert Habitat sur Instagram (nouvel onglet)"
+                >
+                  <InstagramIcon className="h-[18px] w-[18px]" />
+                </a>
+                <a
+                  href={siteContact.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  role="listitem"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/90 transition hover:bg-white/20 hover:text-white"
+                  aria-label="Expert Habitat sur LinkedIn (nouvel onglet)"
+                >
+                  <LinkedInIcon className="h-[18px] w-[18px]" />
+                </a>
+                <a
+                  href={siteContact.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  role="listitem"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/90 transition hover:bg-white/20 hover:text-white"
+                  aria-label="Expert Habitat sur Facebook (nouvel onglet)"
+                >
+                  <FacebookIcon className="h-[18px] w-[18px]" />
+                </a>
+              </div>
             </div>
           </div>
           <div className="grid min-w-0 grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 lg:flex lg:shrink lg:content-start lg:items-start lg:gap-5">
