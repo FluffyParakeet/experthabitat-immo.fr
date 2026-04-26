@@ -28,7 +28,7 @@ export default async function ContactPage({
           Contact
         </h1>
         <p className="mt-3 text-center text-base text-text-muted-custom sm:mt-4 sm:text-lg">
-          {siteContact.hours} · {siteContact.phone} · {siteContact.email}
+          {siteContact.phone} · {siteContact.email}
         </p>
         <div className="mx-auto mt-12 max-w-2xl rounded-2xl border p-7 sm:mt-14 sm:p-9">
           <ContactForm csrfToken={csrf} defaultProjet={defaultProjet} />

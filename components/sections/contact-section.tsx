@@ -2,7 +2,7 @@ import { createCsrfToken } from "@/lib/csrf";
 import { siteContact } from "@/lib/types";
 import { ContactForm } from "@/components/forms/contact-form";
 import { SectionHeader } from "@/components/ui/section-header";
-import { AtSign, Clock, Mail, MapPin, Phone } from "lucide-react";
+import { AtSign, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
 export async function ContactSection() {
@@ -58,10 +58,6 @@ export async function ContactSection() {
                   </span>
                   {siteContact.email}
                 </a>
-                <p className="inline-flex items-center gap-2 text-text-muted-custom">
-                  <Clock className="h-4 w-4" />
-                  {siteContact.hours}
-                </p>
               </div>
             </div>
             <div className="rounded-2xl border border-white/80 bg-white/60 p-6 shadow-sm sm:p-7">

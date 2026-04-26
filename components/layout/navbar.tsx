@@ -165,7 +165,6 @@ function MobileMenuPortal({
             Nous contacter
           </Link>
         </Button>
-        <p className="text-center text-xs text-text-muted-custom sm:text-sm">{siteContact.hours}</p>
       </div>
     </div>,
     el,

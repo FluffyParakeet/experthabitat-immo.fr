@@ -72,10 +72,9 @@ export const siteContact = {
   phone: "06 03 12 37 16",
   phoneE164: "+33603123716",
   email: "aurelien@experthabitat-immo.fr",
-  hours: "Lun–Sam 9h–19h",
-  instagram: "https://www.instagram.com/expert.habitat_",
+  instagram: "https://www.instagram.com/expert.habitat_/",
   linkedin: "https://www.linkedin.com",
-  facebook: "https://www.facebook.com",
+  facebook: "https://www.facebook.com/p/Expert-Habitat-61569449656580/",
   tagline: "La persévérance au cœur de l’immobilier",
 } as const;
 
