@@ -1,25 +1,37 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { clientIpFromHeaders, isOverRateLimit } from "@/lib/rate-limit";
+import { isComingSoonEnabled } from "@/lib/coming-soon";
 
 /**
- * Bordure réseau (auth, rate limit) exécutée en Node (convention `proxy` Next 16+).
+ * Bordure réseau (coming soon, auth, rate limit) (convention `proxy` Next 16+).
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/proxy
  */
-export const config = {
-  matcher: [
-    "/api/contact",
-    "/api/auth/forgot-password",
-    "/api/auth/reset-password",
-    "/api/admin/change-password",
-    "/api/admin/change-email",
-    "/admin/:path*",
-  ],
-};
+const STATIC_EXT = /\.(mp4|webm|ico|png|jpe?g|gif|svg|webp|avif|txt|xml|map|json|woff2?|ttf|eot|webmanifest)$/i;
+
+function isComingSoonExempt(pathname: string) {
+  if (pathname === "/coming-soon") return true;
+  if (pathname === "/favicon.ico" || pathname.startsWith("/favicon.")) return true;
+  if (STATIC_EXT.test(pathname)) return true;
+  if (pathname.startsWith("/api")) return true;
+  if (pathname.startsWith("/admin")) return true;
+  if (pathname.startsWith("/auth")) return true;
+  if (pathname === "/opengraph-image" || pathname === "/twitter-image") return true;
+  return false;
+}
+
+export const config = { matcher: ["/:path*"] };
 
 export default auth((req) => {
+  const pathname = req.nextUrl.pathname;
+  if (pathname.startsWith("/_next/")) {
+    return NextResponse.next();
+  }
+  if (isComingSoonEnabled() && !isComingSoonExempt(pathname)) {
+    return NextResponse.redirect(new URL("/coming-soon", req.nextUrl));
+  }
   const ip = clientIpFromHeaders(req.headers);
-  if (req.nextUrl.pathname === "/api/contact" && req.method === "POST") {
+  if (pathname === "/api/contact" && req.method === "POST") {
     if (isOverRateLimit(ip)) {
       return NextResponse.json(
         { error: "Trop de requêtes. Réessayez dans une minute." },
@@ -27,7 +39,7 @@ export default auth((req) => {
       );
     }
   }
-  if (req.nextUrl.pathname === "/api/auth/forgot-password" && req.method === "POST") {
+  if (pathname === "/api/auth/forgot-password" && req.method === "POST") {
     if (isOverRateLimit(`forgot:${ip}`)) {
       return NextResponse.json(
         { error: "Trop de requêtes. Réessayez plus tard." },
@@ -35,7 +47,7 @@ export default auth((req) => {
       );
     }
   }
-  if (req.nextUrl.pathname === "/api/auth/reset-password" && req.method === "POST") {
+  if (pathname === "/api/auth/reset-password" && req.method === "POST") {
     if (isOverRateLimit(`reset:${ip}`)) {
       return NextResponse.json(
         { error: "Trop de requêtes. Réessayez plus tard." },
@@ -43,7 +55,7 @@ export default auth((req) => {
       );
     }
   }
-  if (req.nextUrl.pathname === "/api/admin/change-password" && req.method === "POST") {
+  if (pathname === "/api/admin/change-password" && req.method === "POST") {
     if (isOverRateLimit(`chgpwd:${ip}`)) {
       return NextResponse.json(
         { error: "Trop de tentatives. Réessayez plus tard." },
@@ -54,7 +66,7 @@ export default auth((req) => {
       return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
     }
   }
-  if (req.nextUrl.pathname === "/api/admin/change-email" && req.method === "POST") {
+  if (pathname === "/api/admin/change-email" && req.method === "POST") {
     if (isOverRateLimit(`chgeml:${ip}`)) {
       return NextResponse.json(
         { error: "Trop de tentatives. Réessayez plus tard." },
@@ -65,7 +77,7 @@ export default auth((req) => {
       return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
     }
   }
-  if (req.nextUrl.pathname.startsWith("/admin") && !req.auth) {
+  if (pathname.startsWith("/admin") && !req.auth) {
     const u = new URL("/auth/login", req.nextUrl);
     u.searchParams.set("callbackUrl", req.nextUrl.pathname);
     return NextResponse.redirect(u);

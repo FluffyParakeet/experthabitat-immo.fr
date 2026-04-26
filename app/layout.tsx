@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { defaultMetadata, businessJsonLd } from "@/lib/metadata";
+import { isComingSoonEnabled } from "@/lib/coming-soon";
 import { ConditionalNavbar } from "@/components/layout/conditional-navbar";
 import { Footer } from "@/components/layout/footer";
 import { AppProviders } from "./providers";
@@ -25,6 +26,19 @@ const inter = Inter({
 export const metadata: Metadata = { ...defaultMetadata };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const soon = isComingSoonEnabled();
+  if (soon) {
+    return (
+      <html lang="fr" className={`${jakarta.variable} ${inter.variable}`}>
+        <head />
+        <body className="min-h-dvh font-sans text-text-primary">
+          <AppProviders>
+            <main className="min-h-dvh w-full min-w-0 overflow-x-hidden">{children}</main>
+          </AppProviders>
+        </body>
+      </html>
+    );
+  }
   return (
     <html lang="fr" className={`${jakarta.variable} ${inter.variable}`}>
       <head>
@@ -35,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }}
         />
       </head>
-        <body className="min-h-dvh font-sans text-text-primary">
+      <body className="min-h-dvh font-sans text-text-primary">
         <AppProviders>
           <CookieConsentProvider>
             <ConditionalNavbar />
