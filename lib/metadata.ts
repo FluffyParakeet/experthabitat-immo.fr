@@ -26,15 +26,6 @@ export const defaultMetadata: Metadata = {
     title: "Expert Habitat · Aurélien Sabé | Agent immobilier",
     description:
       "Vente, achat et estimation dans la métropole lilloise. La persévérance au cœur de l’immobilier.",
-    images: [
-      {
-        url:
-          "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&h=630&fit=crop",
-        width: 1200,
-        height: 630,
-        alt: "Maison d’architecte, couverture Expert Habitat",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
