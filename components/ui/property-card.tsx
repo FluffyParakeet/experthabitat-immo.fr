@@ -14,6 +14,7 @@ function useCanHover() {
   useLayoutEffect(() => {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia("(hover: hover)");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync requête média post-montage
     setCanHover(mq.matches);
     const onChange = () => setCanHover(mq.matches);
     mq.addEventListener("change", onChange);
@@ -34,7 +35,7 @@ function PropertyCardTitle({ title, isCardHovered }: { title: string; isCardHove
     const s = innerRef.current;
     if (!h || !s) return;
     setMaxShift(Math.max(0, s.scrollWidth - h.clientWidth));
-  }, [title]);
+  }, []);
 
   useLayoutEffect(() => {
     measure();
@@ -100,23 +101,26 @@ export function PropertyCard({ p }: { p: Property }) {
       onPointerEnter={() => setCardHover(true)}
       onPointerLeave={() => setCardHover(false)}
     >
-      <div className="relative aspect-[4/3]">
+      <div className="relative isolate aspect-[4/3] overflow-hidden">
         <Image
           src={p.image}
           alt={p.title}
           fill
           sizes="(max-width: 768px) 85vw, 33vw"
-          className="object-cover transition duration-500 group-hover:scale-[1.04]"
+          className="z-0 object-cover will-change-transform transition duration-500 group-hover:scale-[1.04]"
           placeholder="blur"
           blurDataURL={imagePlaceholderBlur}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1035]/85 via-[#1A1035]/10 to-transparent opacity-80 transition group-hover:opacity-95" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-10 min-h-full w-full bg-gradient-to-t from-[#1A1035]/85 via-[#1A1035]/10 to-transparent opacity-80 [transform:translateZ(0)] transition group-hover:opacity-95"
+        />
         <span
-          className={`absolute left-3 top-3 rounded-full bg-gradient-to-r ${badge.c} px-2.5 py-1.5 text-xs font-bold uppercase tracking-wide text-white shadow-md sm:px-3 sm:text-sm`}
+          className={`absolute left-3 top-3 z-20 rounded-full bg-gradient-to-r ${badge.c} px-2.5 py-1.5 text-xs font-bold uppercase tracking-wide text-white shadow-md sm:px-3 sm:text-sm`}
         >
           {badge.t}
         </span>
-        <div className="absolute inset-0 flex items-end justify-center p-4 opacity-0 transition group-hover:opacity-100">
+        <div className="absolute inset-0 z-20 flex items-end justify-center p-4 opacity-0 transition group-hover:opacity-100">
           <Button
             asChild
             size="sm"
