@@ -22,15 +22,38 @@ export function HeroFormSelect({
   fieldLabel,
   options,
   defaultValue = "",
+  value: valueProp,
+  onValueChange,
+  showLabel = true,
+  labelClassName,
+  className,
 }: {
   id: string;
   name: string;
   fieldLabel: string;
   options: readonly HeroFormSelectOption[];
   defaultValue?: string;
+  /** Quand fourni, le select est contrôlé (synchro URL, etc.). */
+  value?: string;
+  onValueChange?: (value: string) => void;
+  showLabel?: boolean;
+  labelClassName?: string;
+  className?: string;
 }) {
+  const isControlled = valueProp !== undefined;
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(defaultValue);
+  const [internalValue, setInternalValue] = useState(defaultValue);
+  const value = isControlled ? (valueProp as string) : internalValue;
+  const setValue = useCallback(
+    (next: string) => {
+      if (isControlled) {
+        onValueChange?.(next);
+      } else {
+        setInternalValue(next);
+      }
+    },
+    [isControlled, onValueChange],
+  );
   const containerRef = useRef<HTMLDivElement>(null);
   const listId = useId();
 
@@ -59,11 +82,16 @@ export function HeroFormSelect({
   const current: HeroFormSelectOption = options.find((o) => o.value === value) ?? options[0]!;
 
   return (
-    <div ref={containerRef} className="relative w-full min-w-0">
+    <div ref={containerRef} className={cn("relative w-full min-w-0", className)}>
       <input type="hidden" name={name} value={value} />
-      <label htmlFor={id} className="mb-1.5 block text-xs font-medium text-white/55">
-        {fieldLabel}
-      </label>
+      {showLabel && (
+        <label
+          htmlFor={id}
+          className={cn("mb-1.5 block text-xs font-medium", labelClassName ?? "text-white/55")}
+        >
+          {fieldLabel}
+        </label>
+      )}
       <button
         type="button"
         id={id}
