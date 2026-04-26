@@ -149,9 +149,6 @@ const items = list.map((x) => {
     .replace(/\.{3}\s*Annonce.*$/i, "")
     .replace(/Annonce\.*$/i, "")
     .trim();
-  const fe = [
-    `Réf. ${ref} — Annonce reprise du portail réseau Expertimo (conseiller Aurélien Sabé, mandataire).`,
-  ];
   return {
     slug,
     ref,
@@ -166,7 +163,7 @@ const items = list.map((x) => {
     description:
       description +
       (description.endsWith("…") || description.endsWith("...") ? "" : "."),
-    features: fe,
+    features: [],
     image: x.image,
     images: [x.image],
   };

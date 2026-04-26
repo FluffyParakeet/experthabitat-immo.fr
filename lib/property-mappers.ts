@@ -1,6 +1,15 @@
 import type { Property, PropertyListing, PropertyType } from "./types";
 import type { PropertyRow } from "./db/schema";
 
+/** Ligne d’attribution générée par l’import Expertimo, à ne pas afficher. */
+const EXPERTIMO_ATTRIBUTION = /Annonce reprise du portail réseau Expertimo/i;
+
+export function stripExpertimoAttributionFromFeatures(lines: string[]): string[] {
+  return lines.filter(
+    (f) => typeof f === "string" && f.trim() && !EXPERTIMO_ATTRIBUTION.test(f),
+  );
+}
+
 const TYPES: PropertyType[] = [
   "Maison",
   "Appartement",
@@ -42,7 +51,9 @@ export function propertyRowToProperty(row: PropertyRow): Property {
     city: row.city,
     badge: parseBadge(row.badge),
     description: row.description,
-    features: Array.isArray(row.features) ? (row.features as string[]) : [],
+    features: stripExpertimoAttributionFromFeatures(
+      Array.isArray(row.features) ? (row.features as string[]) : [],
+    ),
     image: row.image,
     images: Array.isArray(row.images) ? (row.images as string[]) : [],
   };

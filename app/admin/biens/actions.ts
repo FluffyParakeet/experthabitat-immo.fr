@@ -9,6 +9,7 @@ import { getDb } from "@/lib/db";
 import { properties } from "@/lib/db/schema";
 import { propertyFormSchema } from "@/lib/schemas";
 import { slugIsTaken, slugIsTakenByOther } from "@/lib/property-db";
+import { stripExpertimoAttributionFromFeatures } from "@/lib/property-mappers";
 
 function requireSession() {
   return auth().then((s) => {
@@ -20,10 +21,11 @@ function requireSession() {
 }
 
 function parseFeatures(s: string) {
-  return s
+  const lines = s
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
+  return stripExpertimoAttributionFromFeatures(lines);
 }
 
 function parseImageUrls(s: string, mainImage: string) {

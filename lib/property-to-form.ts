@@ -1,9 +1,12 @@
 import type { PropertyFormValues } from "./schemas";
 import type { PropertyRow } from "./db/schema";
+import { stripExpertimoAttributionFromFeatures } from "./property-mappers";
 
 export function propertyToFormValues(p: PropertyRow): PropertyFormValues {
   const fe = Array.isArray(p.features)
-    ? (p.features as string[]).join("\n")
+    ? stripExpertimoAttributionFromFeatures(
+        p.features as string[],
+      ).join("\n")
     : String(p.features ?? "");
   const im = Array.isArray(p.images)
     ? (p.images as string[]).join("\n")
