@@ -12,28 +12,28 @@ const list = [
   {
     Icon: Home,
     t: "Vente",
-    d: "Mise en valeur, diffusion, négociation : on vous accompagne jusqu’à l’acte.",
+    d: "Mise en valeur, diffusion, négociation : on vous garde la main jusqu’au notaire. Même suivi, du début de mandat à l’acte, sans intermédiaire parallèle.",
     a: "Parler vente",
     href: "/contact",
   },
   {
     Icon: Search,
     t: "Achat",
-    d: "Sélection d’annonces, visites cadrées, négociation. Le cadrage dès le premier échange.",
+    d: "Cadrage du besoin, offres ciblées, visites, négociation : on tient le cap. Du premier échange au compromis, un seul interlocuteur, la même exigence partout.",
     a: "Lancer un projet d’achat",
     href: "/contact",
   },
   {
     Icon: LineChart,
     t: "Estimation",
-    d: "Aucun chiffre abstrait : marché, quartier, lumière et historique de l’immeuble rentrent dans l’étude.",
+    d: "Aucun chiffre lâché au hasard : marché, immeuble, lumière et comparaisables entrent dans l’étude. Prix lisible, argumentable, sans flou, sans gonfler l’espoir.",
     a: "Obtenir mon étude chiffrée",
     href: "/estimation",
   },
   {
     Icon: TrendingUp,
     t: "Investissement",
-    d: "Loyers, DPE, fiscalité, revente : on arbitre pour que l’opération tienne sur quelques années, pas seulement sur le papier.",
+    d: "DPE, loyers, fiscalité, revente : l’arbitrage tient l’opération, pas l’éclat d’une fiche. Sur plusieurs années, en phase risque, cash et revente, sans biais d’un seul chiffrage.",
     a: "Un projet patrimonial",
     href: "/contact",
   },
@@ -82,7 +82,7 @@ export function ServicesSection() {
                     <s.Icon className="h-5 w-5" strokeWidth={1.8} />
                   </div>
                   <h3 className="font-display text-xl font-bold text-brand-violet">{s.t}</h3>
-                  <p className="mt-3 text-base leading-[1.7] text-text-muted-custom">
+                  <p className="mt-3 min-h-[5.1rem] text-pretty text-base leading-[1.7] text-text-muted-custom">
                     {s.d}
                   </p>
                   <Link
