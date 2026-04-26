@@ -29,7 +29,6 @@ type Spec = { key: string; label: string; value: string; icon: ReactNode };
 export function PropertyFiche({ p }: { p: Property }) {
   const listing = p.listing ?? "vente";
   const contactProjet = listing === "location" ? "autre" : "acheter";
-  const expertimo = "https://www.reseau-expertimo.fr/1938-mandataire/1";
   const priceLabel =
     listing === "location"
       ? `${new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(p.price)} € / mois`
@@ -79,7 +78,7 @@ export function PropertyFiche({ p }: { p: Property }) {
   }
 
   return (
-    <article className="max-w-4xl">
+    <article className="mx-auto w-full max-w-4xl">
       <nav className="text-sm sm:text-base">
         <Link
           href="/biens"
@@ -211,20 +210,6 @@ export function PropertyFiche({ p }: { p: Property }) {
           </ul>
         </section>
       )}
-
-      <p className="mt-8 sm:mt-10">
-        <a
-          href={expertimo}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-pink transition hover:underline sm:text-base"
-        >
-          Voir d’autres annonces sur le portail Expertimo
-          <span className="text-text-muted-custom" aria-hidden>
-            ↗
-          </span>
-        </a>
-      </p>
 
       <div
         className="mt-10 flex flex-col gap-3 sm:mt-12 sm:flex-row sm:flex-wrap"
