@@ -6,10 +6,12 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Euro, MapPin, Search, SlidersHorizontal, X } from "lucide-react";
 import type { Property } from "@/lib/types";
 import { PropertyCard } from "@/components/ui/property-card";
+import { HeroFormSelect } from "@/components/hero/hero-form-select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { siteContact } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import {
   buildBiensQueryString,
   filterBiens,
@@ -18,10 +20,9 @@ import {
   type BiensQuery,
 } from "@/lib/biens-filters";
 
-const selectClass =
-  "h-11 w-full min-h-11 rounded-xl border border-brand-violet/15 bg-white/90 px-3.5 pr-3 text-base text-text-primary shadow-sm " +
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink/25 focus-visible:border-brand-pink/30 " +
-  "disabled:cursor-not-allowed disabled:opacity-50";
+/** Même base que le hero (`HeroPropertySearch`) : champs alignés visuellement. */
+const filterInputClass =
+  "h-12 min-h-12 rounded-2xl border border-brand-violet/15 text-base shadow-sm";
 
 function hasActiveFilters(f: BiensQuery): boolean {
   return Boolean(f.q || f.type || f.tx || f.min || f.max);
@@ -35,6 +36,21 @@ export function BiensListing({ properties }: { properties: Property[] }) {
   const f = useMemo(
     () => parseBiensQuery(new URLSearchParams(spString)),
     [spString],
+  );
+  const typeOptions = useMemo(
+    () => [
+      { value: "", label: "Tous les types" },
+      ...PROPERTY_TYPE_OPTIONS.map((t) => ({ value: t, label: t })),
+    ],
+    [],
+  );
+  const txOptions = useMemo(
+    () => [
+      { value: "", label: "Toutes les offres" },
+      { value: "vente", label: "Vente" },
+      { value: "location", label: "Location" },
+    ],
+    [],
   );
   const filtered = useMemo(
     () => filterBiens(properties, f),
@@ -138,11 +154,16 @@ export function BiensListing({ properties }: { properties: Property[] }) {
             >
               Ville, secteur…
             </Label>
-            <div className="relative">
-              <MapPin
-                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-pink/80"
+            <div className="relative min-h-12">
+              <span
+                className="pointer-events-none absolute inset-y-0 left-0 z-[1] flex w-[3.25rem] items-center justify-center"
                 aria-hidden
-              />
+              >
+                <MapPin
+                  className="h-[1.15rem] w-[1.15rem] text-brand-pink/80"
+                  strokeWidth={2.1}
+                />
+              </span>
               <Input
                 id="biens-q"
                 name="q"
@@ -152,7 +173,7 @@ export function BiensListing({ properties }: { properties: Property[] }) {
                 autoComplete="off"
                 autoCapitalize="off"
                 placeholder="Ex. Marcq, Lomme, centre-ville…"
-                className="h-11 pl-10"
+                className={cn(filterInputClass, "pl-[3.25rem] placeholder:text-text-muted-custom/80")}
                 aria-describedby="biens-hint"
               />
             </div>
@@ -164,22 +185,15 @@ export function BiensListing({ properties }: { properties: Property[] }) {
             >
               Type de bien
             </Label>
-            <div className="relative">
-              <select
-                id="biens-type"
-                className={selectClass}
-                value={f.type}
-                onChange={(e) => setFilters({ type: e.target.value })}
-                aria-label="Type de bien"
-              >
-                <option value="">Tous les types</option>
-                {PROPERTY_TYPE_OPTIONS.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <HeroFormSelect
+              id="biens-type"
+              name="type"
+              fieldLabel="Type de bien"
+              showLabel={false}
+              options={typeOptions}
+              value={f.type}
+              onValueChange={(v) => setFilters({ type: v })}
+            />
           </div>
           <div>
             <Label
@@ -188,19 +202,21 @@ export function BiensListing({ properties }: { properties: Property[] }) {
             >
               Offre
             </Label>
-            <select
+            <HeroFormSelect
               id="biens-tx"
-              className={selectClass}
+              name="tx"
+              fieldLabel="Vente, location ou toutes les offres"
+              showLabel={false}
+              options={txOptions}
               value={f.tx}
-              onChange={(e) => {
-                setFilters({ tx: e.target.value as BiensQuery["tx"] });
+              onValueChange={(v) => {
+                const tx =
+                  v === "vente" || v === "location"
+                    ? v
+                    : ("" as BiensQuery["tx"]);
+                setFilters({ tx });
               }}
-              aria-label="Vente, location ou toutes les offres"
-            >
-              <option value="">Toutes les offres</option>
-              <option value="vente">Vente</option>
-              <option value="location">Location</option>
-            </select>
+            />
           </div>
         </div>
 
@@ -213,11 +229,13 @@ export function BiensListing({ properties }: { properties: Property[] }) {
               >
                 {f.tx === "location" ? "Loyer min. (€ / mois)" : "Prix min. (€)"}
               </Label>
-              <div className="relative">
-                <Euro
-                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-violet/60"
+              <div className="relative min-h-12">
+                <span
+                  className="pointer-events-none absolute inset-y-0 left-0 z-[1] flex w-[3.25rem] items-center justify-center"
                   aria-hidden
-                />
+                >
+                  <Euro className="h-[1.1rem] w-[1.1rem] text-brand-violet/60" />
+                </span>
                 <Input
                   id="biens-min"
                   type="text"
@@ -230,7 +248,7 @@ export function BiensListing({ properties }: { properties: Property[] }) {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") (e.target as HTMLInputElement).blur();
                   }}
-                  className="h-11 pl-10"
+                  className={cn(filterInputClass, "pl-[3.25rem]")}
                   placeholder="Min."
                 />
               </div>
@@ -242,11 +260,13 @@ export function BiensListing({ properties }: { properties: Property[] }) {
               >
                 {f.tx === "location" ? "Loyer max. (€ / mois)" : "Prix max. (€)"}
               </Label>
-              <div className="relative">
-                <Euro
-                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-violet/60"
+              <div className="relative min-h-12">
+                <span
+                  className="pointer-events-none absolute inset-y-0 left-0 z-[1] flex w-[3.25rem] items-center justify-center"
                   aria-hidden
-                />
+                >
+                  <Euro className="h-[1.1rem] w-[1.1rem] text-brand-violet/60" />
+                </span>
                 <Input
                   id="biens-max"
                   type="text"
@@ -259,7 +279,7 @@ export function BiensListing({ properties }: { properties: Property[] }) {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") (e.target as HTMLInputElement).blur();
                   }}
-                  className="h-11 pl-10"
+                  className={cn(filterInputClass, "pl-[3.25rem]")}
                   placeholder="Max."
                 />
               </div>
