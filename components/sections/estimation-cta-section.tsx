@@ -50,13 +50,9 @@ export function EstimationCtaSection() {
         <h2 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
           Combien vaut vraiment votre bien ?
         </h2>
-        <p className="mt-5 text-base leading-relaxed text-white/92 sm:mt-6 sm:text-lg">
-          Comparaison avec le terrain, visite si c’est utile, chiffrage clair, sans pression
-          inutile.
-        </p>
         <Button
           asChild
-          className="mt-9 h-12 rounded-full bg-white px-8 text-base font-semibold text-brand-violet shadow-xl transition hover:scale-[1.02] hover:bg-white/95"
+          className="mt-8 h-12 rounded-full bg-white px-8 text-base font-semibold text-brand-violet shadow-xl transition hover:scale-[1.02] hover:bg-white/95 sm:mt-9"
         >
           <Link href="/estimation">Demander mon estimation</Link>
         </Button>
