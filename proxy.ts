@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { clientIpFromHeaders, isOverRateLimit } from "@/lib/rate-limit";
 import { isComingSoonEnabled } from "@/lib/coming-soon";
@@ -8,6 +8,33 @@ import { isComingSoonEnabled } from "@/lib/coming-soon";
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/proxy
  */
 const STATIC_EXT = /\.(mp4|webm|ico|png|jpe?g|gif|svg|webp|avif|txt|xml|map|json|woff2?|ttf|eot|webmanifest)$/i;
+
+function firstHeaderValue(value: string | null) {
+  return value?.split(",")[0]?.trim() || undefined;
+}
+
+function publicProtocol(forwardedProto: string | undefined, hasForwardedHost: boolean, fallback: string) {
+  if (forwardedProto === "http" || forwardedProto === "https") {
+    return forwardedProto;
+  }
+  if (hasForwardedHost) {
+    return "https";
+  }
+  return fallback.replace(":", "") || "https";
+}
+
+function redirectUrl(req: Pick<NextRequest, "headers" | "nextUrl">, pathname: string) {
+  const forwardedHost = firstHeaderValue(req.headers.get("x-forwarded-host"));
+  const host = forwardedHost || firstHeaderValue(req.headers.get("host"));
+  const forwardedProto = firstHeaderValue(req.headers.get("x-forwarded-proto"));
+  const protocol = publicProtocol(forwardedProto, Boolean(forwardedHost), req.nextUrl.protocol);
+
+  if (!host) {
+    return new URL(pathname, req.nextUrl);
+  }
+
+  return new URL(pathname, `${protocol}://${host}`);
+}
 
 function isComingSoonExempt(pathname: string) {
   if (pathname === "/coming-soon") return true;
@@ -28,7 +55,7 @@ export default auth((req) => {
     return NextResponse.next();
   }
   if (isComingSoonEnabled() && !isComingSoonExempt(pathname)) {
-    return NextResponse.redirect(new URL("/coming-soon", req.nextUrl));
+    return NextResponse.redirect(redirectUrl(req, "/coming-soon"));
   }
   const ip = clientIpFromHeaders(req.headers);
   if (pathname === "/api/contact" && req.method === "POST") {
@@ -78,7 +105,7 @@ export default auth((req) => {
     }
   }
   if (pathname.startsWith("/admin") && !req.auth) {
-    const u = new URL("/auth/login", req.nextUrl);
+    const u = redirectUrl(req, "/auth/login");
     u.searchParams.set("callbackUrl", req.nextUrl.pathname);
     return NextResponse.redirect(u);
   }
